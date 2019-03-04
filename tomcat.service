@@ -1,0 +1,28 @@
+[Unit]
+    Description=Apache Tomcat Web Application Container
+    After=network.target
+
+    [Service]
+    Type=forking
+
+    #make sure the following has the correct path to jre
+    #This might be path for fall 2018, double check
+    Environment=JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/
+    Environment=CATALINA_PID=/opt/tomcat/apache-tomcat-8.5.34/temp/tomcat.pid
+    Environment=CATALINA_HOME=/opt/tomcat/apache-tomcat-8.5.34
+    Environment=CATALINA_BASE=/opt/tomcat/apache-tomcat-8.5.34
+    Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+    Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+
+    ExecStart=/opt/tomcat/apache-tomcat-8.5.34/bin/startup.sh
+    ExecStop=/opt/tomcat/apache-tomcat-8.5.34/bin/shutdown.sh
+
+    User=tomcat
+    Group=tomcat
+    UMask=0007
+    RestartSec=10
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+

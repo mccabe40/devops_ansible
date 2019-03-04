@@ -1,0 +1,180 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: change umask
+      lineinfile: 
+       path: /etc/skel/.profile
+       line: umask 007
+ 
+    - name: create pines group
+      group:
+       name: pines
+       state: present
+       system: yes
+
+
+    - name: create flynn group
+      group:
+       name: flynn
+       state: present
+       system: yes
+
+
+    - name: create pickles group
+      group:
+       name: pickles
+       state: present
+       system: yes
+
+    - name: add several users to pines
+      user:
+       name: "{{ item }}"
+       state: present
+       groups: "pines"
+      loop:
+       - mabel
+       - dipper
+       - gruncle
+
+    
+    - name: add several users to flynn
+      user:
+       name: "{{ item }}"
+       state: present
+       groups: "flynn"
+      loop:
+       - phineas
+       - ferb
+       - candace
+
+    - name: add several users to pickles
+      user:
+       name: "{{ item }}"
+       state: present
+       groups: "pickles"
+      loop:
+       - didi
+       - stu
+       - tommy
+       - dill
+
+     
+
+    - name: create pines directory
+      file: path=/play/pines state=directory
+
+    - name: create flynn directory
+      file: path=/play/flynn state=directory 
+
+    - name: create pickles directory
+      file: path=/play/pickles state=directory
+     
+     
+    - name: change /play/pines  ownership
+      file:
+       path: /play/pines
+       state: directory
+       owner: gruncle
+       group: pines
+
+    - name: change /play/flynn  ownership
+      file:
+       path: /play/flynn
+       state: directory
+       owner: candace
+       group: flynn
+
+
+    - name: change /play/pickles  ownership
+      file:
+       path: /play/pickles
+       state: directory
+       owner: dill
+       group: pickles
+   
+
+    - name: mabel creates a file
+      file: 
+       path: /play/pines/mabel.txt
+       state: touch
+       owner: mabel
+       group: mabel
+       mode: 0770
+
+    - name: dipper creates a file
+      file:
+       path: /play/pines/dipper.txt
+       state: touch
+       owner: dipper
+       group: dipper
+       mode: 0770
+
+    - name: gruncle creates a file
+      file:
+       path: /play/pines/gruncle.txt
+       state: touch
+       owner: gruncle
+       group: gruncle
+       mode: 0770
+
+    - name: phineas creates a file
+      file:
+       path: /play/flynn/phineas.txt
+       state: touch
+       owner: phineas
+       group: phineas
+       mode: 0770
+
+    - name: ferb creates a file
+      file:
+       path: /play/flynn/ferb.txt
+       state: touch
+       owner: ferb
+       group: ferb
+       mode: 0770
+   
+
+    - name: candace creates a file
+      file:
+       path: /play/flynn/candace.txt
+       state: touch
+       owner: candace
+       group: candace
+       mode: 0770
+   
+
+    - name: didi creates a file
+      file:
+       path: /play/pickles/didi.txt
+       state: touch
+       owner: didi
+       group: didi
+       mode: 0770
+
+    - name: stu creates a file
+      file:
+       path: /play/pickles/stu.txt
+       state: touch
+       owner: stu
+       group: stu
+       mode: 0770
+  
+
+    - name: tommy  creates a file
+      file:
+       path: /play/pickles/tommy.txt
+       state: touch
+       owner: tommy
+       group: tommy
+       mode: 0770
+
+
+    - name: dill creates a file
+      file:
+       path: /play/pickles/dill.txt
+       state: touch
+       owner: dill
+       group: dill
+       mode: 0770
+

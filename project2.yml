@@ -1,0 +1,188 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: change umask
+      lineinfile: 
+       path: /etc/skel/.profile
+       line: umask = 007
+
+    - name: create flinstsone group
+      group:
+       name: flintstone
+       state: present
+       system: yes
+
+    - name: create simpson group
+      group:
+       name: simpson
+       state: present
+       system: yes
+
+
+    - name: create rubble group
+      group:
+       name: rubble
+       state: present
+       system: yes
+
+    - name: add several users to flinstone
+      user:
+       name: "{{ item }}"
+       state: present
+       groups: "flintstone"
+      loop:
+       - fred
+       - wilma
+       - pebbles
+
+    - name: add several users to simpson
+      user:
+       name: "{{ item }}"
+       state: present
+       groups: "simpson"
+      loop:
+       - homer
+       - marge
+       - bart
+       - lisa
+       - maggie
+
+    - name: add several users to rubble
+      user:
+       name: "{{ item }}"
+       state: present
+       groups: "rubble"
+      loop:
+       - barney
+       - betty
+       - bambam
+
+    - name: create work directory
+      file: path=/work state=directory
+
+    - name: create flintstone directory
+      file: path=/work/flintstone state=directory
+
+    - name: create simpson directory
+      file: path=/work/simpson state=directory 
+
+    - name: create rubble directory
+      file: path=/work/rubble state=directory  
+
+    - name: change /work/flintstone  ownership
+      file:
+       path: /work/flintstone
+       state: directory
+       owner: pebbles
+       group: flintstone
+
+    - name: change work/simpson  ownership
+      file:
+       path: /work/simpson
+       state: directory
+       owner: maggie
+       group: simpson
+
+
+    - name: change /work/rubble  ownership
+      file:
+       path: /work/rubble
+       state: directory
+       owner: bambam
+       group: rubble
+   
+
+    - name: homer creates a file
+      file: 
+       path: /work/simpson/homer.txt
+       state: touch
+       owner: homer
+       group: homer
+       mode: 0770
+
+    - name: marge creates a file
+      file:
+       path: /work/simpson/marge.txt
+       state: touch
+       owner: marge
+       group: marge
+       mode: 0770
+
+    - name: bart creates a file
+      file:
+       path: /work/simpson/bart.txt
+       state: touch
+       owner: bart
+       group: bart
+       mode: 0770
+
+    - name: lisa creates a file
+      file:
+       path: /work/simpson/lisa.txt
+       state: touch
+       owner: lisa
+       group: lisa
+       mode: 0770
+
+    - name: maggie creates a file
+      file:
+       path: /work/simpson/maggie.txt
+       state: touch
+       owner: maggie
+       group: maggie
+       mode: 0770
+   
+
+    - name: fred creates a file
+      file:
+       path: /work/flintstone/fred.txt
+       state: touch
+       owner: fred
+       group: fred
+       mode: 0770
+   
+
+    - name: wilma creates a file
+      file:
+       path: /work/flintstone/wilma.txt
+       state: touch
+       owner: wilma
+       group: wilma
+       mode: 0770
+
+    - name: pebbles creates a file
+      file:
+       path: /work/flintstone/pebbles.txt
+       state: touch
+       owner: pebbles
+       group: pebbles
+       mode: 0770
+  
+
+    - name: barney creates a file
+      file:
+       path: /work/rubble/barney.txt
+       state: touch
+       owner: barney
+       group: barney
+       mode: 0770
+
+
+    - name: betty creates a file
+      file:
+       path: /work/rubble/betty.txt
+       state: touch
+       owner: betty
+       group: betty
+       mode: 0770
+
+    - name: bambam creates a file
+      file:
+       path: /work/rubble/bambam.txt
+       state: touch
+       owner: bambam
+       group: bambam
+       mode: 0770
+
+

@@ -1,0 +1,117 @@
+---
+- hosts: all
+  become: yes
+  tasks: 
+    - name: create tomcat group
+      group:
+       name: tomcat
+       state: present
+       system: yes
+
+    - name: create the tomcat user
+      user: 
+       name: tomcat
+       group: tomcat
+       shell: /bin/false
+       home: /opt/tomcat
+
+    - name: create tomcat directory
+      file: path=/opt/tomcat state=directory     
+
+    - name: Download Tomcat
+      get_url:
+       url: http://mirrors.sonic.net/apache/tomcat/tomcat-8/v8.5.34/bin/apache-tomcat-8.5.34.tar.gz
+       dest: /opt/tomcat
+
+    - name: Unarchive tomcat tar file
+      unarchive:
+       src: /opt/tomcat/apache-tomcat-8.5.34.tar.gz
+       dest: /opt/tomcat
+       remote_src: yes
+
+    - name: change group of /opt/tomcat to tomcat
+      file:
+       path: /opt/tomcat/apache-tomcat-8.5.34
+       owner: tomcat
+       group: tomcat
+       recurse: yes
+
+    - name: change permissions on conf
+      file:
+       path: /opt/tomcat/apache-tomcat-8.5.34/conf
+       owner: tomcat
+       group: tomcat
+       mode: g+r
+       recurse: yes
+
+    - name: change permissions on conf no recurse
+      file:
+       path: /opt/tomcat/apache-tomcat-8.5.34/conf
+       owner: tomcat
+       group: tomcat
+       mode: g+x
+
+    - name: change webapp ownership
+      file:
+       path: /opt/tomcat/apache-tomcat-8.5.34/webapps
+       state: directory
+       owner: tomcat
+       group: tomcat
+
+    - name: change work  ownership
+      file:
+       path: /opt/tomcat/apache-tomcat-8.5.34/work
+       state: directory
+       owner: tomcat
+       group: tomcat
+
+    - name: change temp  ownership
+      file:
+       path: /opt/tomcat/apache-tomcat-8.5.34/temp
+       state: directory
+       owner: tomcat
+       group: tomcat
+
+    - name: change logs ownership
+      file:
+       path: /opt/tomcat/apache-tomcat-8.5.34/logs
+       state: directory
+       owner: tomcat
+       group: tomcat
+
+    - name: install default-jre
+      package:
+       name: default-jre
+       state: present
+
+    - name: add tomcat.service file
+      copy:
+       src: /home/a/amccabe/ansible/tomcat.service
+       dest: /etc/systemd/system
+       remote_src: no 
+
+
+    - name: add tomcat users file
+      copy:
+       src: /home/a/amccabe/ansible/tomcat-users.xml
+       dest: /opt/tomcat/apache-tomcat-8.5.34/conf/tomcat-users.xml
+       remote_src: no
+
+
+    - name: daemon reload
+      command: systemctl daemon-reload
+      become: true
+      become_user: root
+   
+
+    - name: start tomcat from folder
+      become: yes
+      command: chdir=/opt/tomcat/apache-tomcat-8.5.34/bin systemctl start tomcat
+
+      #  - name: enable tomcat startup
+      #systemd:
+      #name: tomcat
+      #enabled: yes
+      #state: restarted
+      #become: true
+

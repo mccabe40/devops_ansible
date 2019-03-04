@@ -1,0 +1,44 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+      - name: say hello
+        shell: echo "YAY I GOT IT TO WORK"
+      - name: redirect to a flie
+        shell: echo "send to a file" >> temp.txt
+      - name: Create the user simon
+        user: 
+          state: present
+          name: simon
+          uid: 2299
+      - name: copy secret file over
+        copy: 
+          src: somfile.txt
+          dest: /tmp/foobar.txt
+          owner: simon
+          group: simon
+          mode: 0640
+      - name: create tomcat group
+        group:
+          name: tomcat
+          state: present
+          system: yes
+
+      - name: create the tomcat user
+        user: 
+          name: tomcat
+          group: tomcat
+          shell: /bin/false
+          home: /opt/tomcat
+
+      - name: create /opt/tomcat
+        file:
+          state: directory
+          mode: 0755
+          path: /opt/tomcat
+
+
+
+
+
+
